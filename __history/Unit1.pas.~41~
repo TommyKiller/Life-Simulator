@@ -1,0 +1,205 @@
+unit Unit1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, System.Actions,
+  Vcl.ActnList, Vcl.Menus;
+
+type
+  TBody = class(TForm)
+    Map: TImage;
+    Timer1: TTimer;
+    ActionList1: TActionList;
+    MainMenu1: TMainMenu;
+    New: TAction;
+    Start: TAction;
+    Stop: TAction;
+    Pause: TAction;
+    Exit: TAction;
+    Program1: TMenuItem;
+    New1: TMenuItem;
+    N1: TMenuItem;
+    Start1: TMenuItem;
+    Pause1: TMenuItem;
+    Stop1: TMenuItem;
+    N2: TMenuItem;
+    Exit1: TMenuItem;
+    Help1: TMenuItem;
+    Help: TAction;
+    Settings1: TMenuItem;
+    Windowed1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure NewGame;
+    procedure Timer1Timer(Sender: TObject);
+    procedure MapPainting;
+    procedure MapConstructing;
+    procedure NewExecute(Sender: TObject);
+    procedure StartExecute(Sender: TObject);
+    procedure StopExecute(Sender: TObject);
+    procedure PauseExecute(Sender: TObject);
+    procedure ExitExecute(Sender: TObject);
+    procedure HelpExecute(Sender: TObject);
+    procedure Windowed1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Body: TBody;
+  SR,RR,HI,IP,CF,HD,SH: Integer;
+  CD: Cardinal;
+  map1,map2: array[-1..104,-1..196] of Integer;
+
+implementation
+
+{$R *.dfm}
+
+uses Unit2, Unit3;
+
+procedure TBody.FormCreate(Sender: TObject);
+begin
+  with Body.Canvas do begin
+    Align:=alClient;
+    ClientHeight:=721;
+    ClientWidth:=1365;
+  end;
+  with Map.Canvas do begin
+    ClientHeight:=Body.ClientHeight;
+    ClientWidth:=Body.ClientWidth;
+  end;
+  WindowState:=wsMaximized;
+  Timer1.Enabled:=false;
+  Body.Pause1.Enabled:=false;
+  Body.Stop1.Enabled:=false;
+  Body.Start1.Enabled:=false;
+end;
+
+procedure TBody.NewExecute(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  Body.Pause1.Enabled:=false;
+  Body.Stop1.Enabled:=false;
+  Body.Start1.Enabled:=true;
+  if not Assigned(Editor) then
+    Editor:=TEditor.Create(Self);
+  Editor.ShowModal;
+end;
+
+procedure TBody.PauseExecute(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  Body.Pause1.Enabled:=false;
+  Body.Start1.Enabled:=true;
+end;
+
+procedure TBody.StartExecute(Sender: TObject);
+begin
+  Timer1.Enabled:=true;
+  Body.Start1.Enabled:=false;
+  Body.Pause1.Enabled:=true;
+  Body.Stop1.Enabled:=true;
+end;
+
+procedure TBody.StopExecute(Sender: TObject);
+begin
+  Timer1.Enabled:=false;
+  Body.Stop1.Enabled:=false;
+  Body.Pause1.Enabled:=false;
+  Body.Start1.Enabled:=true;
+  NewGame;
+end;
+
+procedure TBody.ExitExecute(Sender: TObject);
+begin
+  Body.Close;
+end;
+
+procedure TBody.Windowed1Click(Sender: TObject);
+begin
+  if BorderStyle=bsNone then begin
+    BorderStyle:=bsSingle;
+    Body.Windowed1.Caption:='Full screen';
+  end
+  else begin
+    BorderStyle:=bsNone;
+    Body.Windowed1.Caption:='Windowed';
+  end;
+end;
+
+procedure TBody.HelpExecute(Sender: TObject);
+begin
+  if not Assigned(Reference) then
+    Reference:=TReference.Create(Self);
+  Reference.Show;
+end;
+
+procedure TBody.NewGame;
+var i,j,m,n,c,k: Integer;
+begin
+  randomize;
+  for i:=-1 to 104 do
+    for j:=-1 to 196 do
+      map1[i,j]:=0;
+  map2:=map1;
+  for i:=0 to 103 do
+    for j:=0 to 195 do begin
+      c:=0;
+      for m:=i-1 to i+1 do
+        for n:=j-1 to j+1 do
+          if map1[m,n]>0 then inc(c);
+      k:=random(100);
+      if k<IP+c*CF then map1[i,j]:=SH;
+    end;
+  MapPainting;
+end;
+
+procedure TBody.Timer1Timer(Sender: TObject);
+begin
+  if Enabled then begin
+    Application.ProcessMessages;
+    Timer1.Interval:=CD;
+    MapConstructing;
+    MapPainting;
+  end;
+end;
+
+procedure TBody.MapConstructing;
+var i,j,m,n,c: Integer;
+begin
+  for i:=0 to 103 do
+    for j:=0 to 195 do
+      if map1[i,j]<=0 then begin
+        c:=0;
+        for m:=i-1 to i+1 do
+          for n:=j-1 to j+1 do
+            if map1[m,n]>0 then inc(c);
+        if c=RR then map2[i,j]:=1;
+      end
+      else if map1[i,j]>0 then begin
+        c:=0;
+        for m:=i-1 to i+1 do
+          for n:=j-1 to j+1 do
+            if map1[m,n]>0 then inc(c);
+        if c=SR+1 then map2[i,j]:=map1[i,j]+HI
+        else map2[i,j]:=map1[i,j]-HD;
+      end;
+  map1:=map2;
+end;
+
+procedure TBody.MapPainting;
+var i,j: Integer;
+begin
+  Map.CleanupInstance;
+  for i:=0 to 103 do
+    for j:=0 to 195 do begin
+      if map1[i,j]>0 then Map.Canvas.Brush.Color:=clGreen
+      else if map1[i,j]<=0 then Map.Canvas.Brush.Color:=clWhite;
+      Map.Canvas.FillRect(Rect(j*7,i*7,(j+1)*7,(i+1)*7));
+    end;
+end;
+
+end.

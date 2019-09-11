@@ -1,0 +1,39 @@
+unit Unit3;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TReference = class(TForm)
+    ListBox1: TListBox;
+    Label1: TLabel;
+    procedure ListBox1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Reference: TReference;
+
+implementation
+
+{$R *.dfm}
+
+procedure TReference.ListBox1Click(Sender: TObject);
+begin
+  if ListBox1.Selected[0] then Label1.Caption:='Use it to calibrate amount of live cells for life-sustaining.'
+  else if ListBox1.Selected[1] then Label1.Caption:='Use it to calibrate amount of live cells to create a new living'#13#10'cell.'
+  else if ListBox1.Selected[2] then Label1.Caption:='Use it to increase or reduce the health increase of a cell,'#13#10'when all life conditions are performed.'
+  else if ListBox1.Selected[3] then Label1.Caption:='Every cycle = 1 change.'
+  else if ListBox1.Selected[4] then Label1.Caption:='Percentage of living cells at the start.'
+  else if ListBox1.Selected[5] then Label1.Caption:='The more living cells - the greater chance that nearby cell'#13#10'will be living.'
+  else if ListBox1.Selected[6] then Label1.Caption:='Use it to increase or reduce the health decrease of a cell,'#13#10'when life conditions are not performed.'
+  else if ListBox1.Selected[7] then Label1.Caption:='Amount of "health points" that living cells will have at the'#13#10'start.';
+end;
+
+end.

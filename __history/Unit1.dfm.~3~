@@ -1,0 +1,87 @@
+object Body: TBody
+  Left = 0
+  Top = 0
+  Caption = 'Body'
+  ClientHeight = 419
+  ClientWidth = 445
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Map: TImage
+    Left = 0
+    Top = 0
+    Width = 445
+    Height = 419
+    Align = alClient
+    ExplicitLeft = 120
+    ExplicitTop = 40
+    ExplicitWidth = 201
+    ExplicitHeight = 281
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+  end
+  object ActionList1: TActionList
+    Left = 32
+    object New: TAction
+      Category = 'MainMenu'
+      Caption = 'New'
+      OnExecute = NewExecute
+    end
+    object Start: TAction
+      Category = 'MainMenu'
+      Caption = 'Start'
+      OnExecute = StartExecute
+    end
+    object Stop: TAction
+      Category = 'MainMenu'
+      Caption = 'Stop'
+      OnExecute = StopExecute
+    end
+    object Pause: TAction
+      Category = 'MainMenu'
+      Caption = 'Pause'
+      OnExecute = PauseExecute
+    end
+    object Exit: TAction
+      Category = 'MainMenu'
+      Caption = 'Exit'
+      OnExecute = ExitExecute
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 64
+    object New1: TMenuItem
+      Caption = 'Programm'
+      object N1: TMenuItem
+        Action = New
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Start1: TMenuItem
+        Action = Start
+      end
+      object Pause1: TMenuItem
+        Action = Pause
+      end
+      object Stop1: TMenuItem
+        Action = Stop
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object Exit1: TMenuItem
+        Action = Exit
+      end
+    end
+  end
+end

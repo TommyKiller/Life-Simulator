@@ -1,0 +1,60 @@
+unit Unit2;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls;
+
+type
+  TEditor = class(TForm)
+    SR: TEdit;
+    Label1: TLabel;
+    Caption: TLabel;
+    Label2: TLabel;
+    RR: TEdit;
+    Label3: TLabel;
+    IP: TEdit;
+    Label4: TLabel;
+    CF: TEdit;
+    Accept: TButton;
+    Label5: TLabel;
+    HI: TEdit;
+    Label6: TLabel;
+    HD: TEdit;
+    Label7: TLabel;
+    CS: TEdit;
+    Cancel: TButton;
+    procedure CancelClick(Sender: TObject);
+    procedure AcceptClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Editor: TEditor;
+
+implementation
+
+{$R *.dfm}
+
+procedure TEditor.AcceptClick(Sender: TObject);
+begin
+  Unit1.SR:=StrToInt(SR.Text);
+  Unit1.RR:=StrToInt(RR.Text);
+  Unit1.HI:=StrToInt(HI.Text);
+  Unit1.CS:=StrToInt(CS.Text);
+  Unit1.IP:=StrToInt(IP.Text);
+  Unit1.CF:=StrToInt(CF.Text);
+  Unit1.HD:=StrToInt(HD.Text);
+  Editor.Close;
+end;
+
+procedure TEditor.CancelClick(Sender: TObject);
+begin
+  Editor.Close;
+end;
+
+end.
